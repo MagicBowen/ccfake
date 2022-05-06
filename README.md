@@ -1,6 +1,6 @@
 ## Usage
 
-Download this project template, and rename folder name to your project name.
+`ccfake` is a fake framework for developer testing under c++.
 
 ```sh
 $ chmod a+x ./ccup.sh
