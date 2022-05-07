@@ -16,14 +16,14 @@ enum class Status {
 	UNIMPLEMENTED = -6,
 };
 
-static inline bool ccfake_status_ok(Status status)
+static inline bool status_is_ok(Status status)
 {
     return (status > Status::RESERVED_FAIL);
 }
 
-static inline bool ccfake_status_failed(Status status)
+static inline bool status_is_failed(Status status)
 {
-    return !ccfake_status_ok(status);
+    return !status_is_ok(status);
 }
 
 CCFAKE_NS_END

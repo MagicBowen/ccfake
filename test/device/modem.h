@@ -6,10 +6,10 @@
 
 CCFAKE_NS_BEGIN
 
-struct Device : IS_DTREE_NODE {
+struct Device : ::CCFAKE_NS::DtreeNode {
 };
 
-struct Modem : IS_DTREE_NODE {
+DTREE_NODE_TYPE(Modem) {
 	Modem(int id)
 	: id{id} {
 	}
@@ -19,7 +19,7 @@ struct Modem : IS_DTREE_NODE {
 	std::string ratMode;
 };
 
-struct Band : IS_DTREE_NODE {
+DTREE_NODE_TYPE(Band) {
 	Band(int id, std::string mode)
 	: id{id}, ratMode{mode} {
 	}
@@ -28,7 +28,7 @@ struct Band : IS_DTREE_NODE {
 	std::string ratMode;
 };
 
-struct RxProtect : IS_DTREE_NODE {
+DTREE_NODE_TYPE(RxProtect) {
 	RxProtect(int id) : id{id} {
 	}
 

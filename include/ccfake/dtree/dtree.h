@@ -5,16 +5,22 @@
 
 CCFAKE_NS_BEGIN
 
-#define IS_DTREE_NODE public ::CCFAKE_NS::DtreeNode
+#define DTREE_NODE_TYPE(TYPE) struct TYPE : ::CCFAKE_NS::DtreeNode
 
-#define DTREE_OF(TYPE, NAME, ...)      		\
+#define DTREE_(TYPE, NAME, ...)        \
 std::unique_ptr<TYPE> NAME = ::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) * [](auto && self)
 
-#define DTREE_NODE_OF(TYPE, ...)      		\
+#define NODE_(TYPE, ...)      		    \
 self + ::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) * [](auto && self)
 
-#define DTREE_LEAF_OF(TYPE, ...)       		\
-DTREE_NODE_OF(TYPE, ##__VA_ARGS__) {}
+#define LEAF_(TYPE, ...)    NODE_(TYPE, ##__VA_ARGS__) {}
+
+#define ATTR_(NAME, VALUE)  self.NAME = (VALUE)
+
+#define DTREE_FIND_NODE(ROOT, TYPE, COND) 	\
+		ROOT->getNodeBy<TYPE>([&](const auto& self) {return (COND);})
+
+#define DTREE_FIND_ROOT(NODE, TYPE)  NODE->getRootOf<TYPE>()
 
 CCFAKE_NS_END
 

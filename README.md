@@ -51,8 +51,9 @@ $ chmod a+x ./ccup.sh
 
 ## TODO
 
-- [ ]: remove node type ?
-- [ ]: refact interface and macro
+- [x]: remove node type ?
+- [x]: refact interface and macro
+- [ ]: test example
 - [ ]: lifecycle, right reference?
 - [ ]: visitor
 - [ ]: dump
