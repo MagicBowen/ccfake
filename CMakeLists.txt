@@ -43,7 +43,7 @@ CPMUsePackageLock(package-lock.cmake)
 
 # ---- Add source folder for project ----
 
-add_subdirectory("src")
+# add_subdirectory("src")
 
 # ---- Add test for project ----
 
