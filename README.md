@@ -48,3 +48,14 @@ $ chmod a+x ./ccup.sh
 # help
 ./ccup.sh -h
 ```
+
+## TODO
+
+- [ ]: remove node type ?
+- [ ]: refact interface and macro
+- [ ]: lifecycle, right reference?
+- [ ]: visitor
+- [ ]: dump
+- [ ]: activate
+- [ ]: manager
+- [ ]: fake system

@@ -1,7 +1,8 @@
 .cproject
 .project
-.settings/*
 .DS_Store
 .idea/*
+.vscode/*
+.settings/*
 build/*
 cmake-build-debug/*
