@@ -10,7 +10,6 @@ CCFAKE_NS_BEGIN
 
 struct DtreeNode {
 	using Type = std::string;
-	using Ptr = std::unique_ptr<DtreeNode>;
 
 	template<typename ROOT>
 	ROOT* getRootOf() {
@@ -22,6 +21,25 @@ struct DtreeNode {
 	template<typename ROOT>
 	const ROOT* getRootOf() const {
 		return const_cast<DtreeNode&>(*this).getRootOf<ROOT>();
+	}
+
+	template<typename NODE>
+	NODE* getNode() {
+		NODE *node = dynamic_cast<NODE*>(this);
+		if (node) return node;
+
+		if (!hasChildren()) return nullptr;
+
+		for (auto& child : children) {
+			auto result = child->getNode<NODE>();
+			if (result) return result;
+		}
+		return nullptr;
+	}
+
+	template<typename NODE>
+	const NODE* getNode() const {
+		return const_cast<DtreeNode&>(*this).getNode<NODE>();
 	}
 
 	template<typename NODE, typename EQUAL>
@@ -70,6 +88,7 @@ private:
 	}
 
 private:
+	using Ptr = std::unique_ptr<DtreeNode>;
 	using DtreeNodeChildren = std::list<Ptr>;
 
 	Type type{"DtreeNode"};

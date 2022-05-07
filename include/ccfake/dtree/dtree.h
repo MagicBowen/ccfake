@@ -17,10 +17,13 @@ self + ::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) * [](auto && se
 
 #define ATTR_(NAME, VALUE)  self.NAME = (VALUE)
 
-#define DTREE_FIND_NODE(ROOT, TYPE, COND) 	\
-		ROOT->getNodeBy<TYPE>([&](const auto& self) {return (COND);})
+#define DTREE_FIND(ROOT, TYPE) 	     ROOT->getNode<TYPE>()
 
 #define DTREE_FIND_ROOT(NODE, TYPE)  NODE->getRootOf<TYPE>()
+
+#define DTREE_FIND_BY(ROOT, TYPE, COND) \
+		ROOT->getNodeBy<TYPE>([&](const auto& self) {return (COND);})
+
 
 CCFAKE_NS_END
 
