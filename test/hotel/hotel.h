@@ -85,12 +85,12 @@ private:
 	std::string name;
 };
 
-#define ATTR(NAME, VALUE)           ATTR_(NAME, VALUE)
-#define HOTEL(NAME) 				DTREE_(Hotel, NAME, #NAME)
-#define LOBBY()     				NODE_(Lobby)
-#define FLOOR(NO)     				NODE_(Floor, NO)
-#define ROOM(NO)      				NODE_(Room, NO)
-#define MEETING_ROOM(NO)  			NODE_(MeetingRoom, NO)
-#define RESTAURANT(NAME)            LEAF_(Restaurant, NAME)
+#define HOTEL(NAME) 				DTREE_OF(Hotel, NAME, #NAME)
+#define LOBBY()     				DTREE_NODE_OF(Lobby)
+#define FLOOR(NO)     				DTREE_NODE_OF(Floor, NO)
+#define ROOM(NO)      				DTREE_NODE_OF(Room, NO)
+#define MEETING_ROOM(NO)  			DTREE_NODE_OF(MeetingRoom, NO)
+#define RESTAURANT(NAME)            DTREE_LEAF_OF(Restaurant, NAME)
+#define ATTR(NAME, VALUE)           DTREE_ATTR_OF(NAME, VALUE)
 
 #endif

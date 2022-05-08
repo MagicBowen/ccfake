@@ -12,53 +12,53 @@ struct DtreeNode {
 	using Type = std::string;
 
 	template<typename ROOT>
-	ROOT* getRootOf() {
+	ROOT* getSuperOf() {
 		if (isTreeRoot()) return nullptr;
 		auto result = dynamic_cast<ROOT*>(parent);
-		return result ? result : parent->getRootOf<ROOT>();
+		return result ? result : parent->getSuperOf<ROOT>();
 	}
 
 	template<typename ROOT>
-	const ROOT* getRootOf() const {
-		return const_cast<DtreeNode&>(*this).getRootOf<ROOT>();
+	const ROOT* getSuperOf() const {
+		return const_cast<DtreeNode&>(*this).getSuperOf<ROOT>();
 	}
 
 	template<typename NODE>
-	NODE* getNode() {
+	NODE* getLowerOf() {
 		NODE *node = dynamic_cast<NODE*>(this);
 		if (node) return node;
 
 		if (!hasChildren()) return nullptr;
 
 		for (auto& child : children) {
-			auto result = child->getNode<NODE>();
+			auto result = child->getLowerOf<NODE>();
 			if (result) return result;
 		}
 		return nullptr;
 	}
 
 	template<typename NODE>
-	const NODE* getNode() const {
-		return const_cast<DtreeNode&>(*this).getNode<NODE>();
+	const NODE* getLowerOf() const {
+		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>();
 	}
 
 	template<typename NODE, typename EQUAL>
-	NODE* getNodeBy(const EQUAL& equal) {
+	NODE* getLowerBy(const EQUAL& equal) {
 		NODE *node = dynamic_cast<NODE*>(this);
 		if (node && equal(*node)) return node;
 
 		if (!hasChildren()) return nullptr;
 
 		for (auto& child : children) {
-			auto result = child->getNodeBy<NODE>(equal);
+			auto result = child->getLowerBy<NODE>(equal);
 			if (result) return result;
 		}
 		return nullptr;
 	}
 
 	template<typename NODE, typename EQUAL>
-	const NODE* getNodeBy(const EQUAL& equal) const {
-		return const_cast<DtreeNode&>(*this).getNodeBy<NODE>(equal);
+	const NODE* getLowerBy(const EQUAL& equal) const {
+		return const_cast<DtreeNode&>(*this).getLowerBy<NODE>(equal);
 	}
 
 	virtual ~DtreeNode() = default;
@@ -73,6 +73,7 @@ private:
 	}
 
 private:
+	friend struct Dtree;
 	template<typename NODE> friend struct DtreeNodeBuilder;
 	template<typename NODE> friend DtreeNode& operator+ (DtreeNode& root, NODE&&);
 

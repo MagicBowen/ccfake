@@ -1,29 +1,50 @@
 #ifndef HCB177A07_555C_415C_B7E5_C20E0124CEE6
 #define HCB177A07_555C_415C_B7E5_C20E0124CEE6
 
-#include "ccfake/dtree/dtree_node_builder.h"
+#include "ccfake/dtree/dtree_builder.h"
+#include "ccfake/log/log.h"
 
 CCFAKE_NS_BEGIN
 
-#define DTREE_NODE_TYPE(TYPE) struct TYPE : ::CCFAKE_NS::DtreeNode
+struct Dtree {
+	Dtree(DtreeNode& node)
+	: dtree{&node} {
+	}
 
-#define DTREE_(TYPE, NAME, ...)        \
-std::unique_ptr<TYPE> NAME = ::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) * [](auto && self)
+	Dtree(DtreeNode* pnode) {
+		if (!pnode) {
+			CCFAKE_FATAL("Dtree constructed by nullptr!");
+		}
+		dtree = pnode;
+	}
 
-#define NODE_(TYPE, ...)      		    \
-self + ::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) * [](auto && self)
+	Dtree(DtreeNode::Ptr& pnode) {
+		if (!pnode) {
+			CCFAKE_FATAL("Dtree constructed by invalid ptr!");
+		}
+		dtree = pnode.get();
+	}
+	template<typename NODE>
+	Dtree(std::unique_ptr<NODE> & pnode) {
+		if (!pnode) {
+			CCFAKE_FATAL("Dtree constructed by invalid ptr!");
+		}
+		dtree = pnode.get();
+	}
 
-#define LEAF_(TYPE, ...)    NODE_(TYPE, ##__VA_ARGS__) {}
+	template<typename NODE>
+	NODE* get() {
+		return dtree->getLowerOf<NODE>();
+	}
 
-#define ATTR_(NAME, VALUE)  self.NAME = (VALUE)
+	template<typename NODE, typename COND>
+	NODE* get(const COND& cond) {
+		return dtree->getLowerBy<NODE>(cond);
+	}
 
-#define DTREE_FIND(ROOT, TYPE) 	     ROOT->getNode<TYPE>()
-
-#define DTREE_FIND_ROOT(NODE, TYPE)  NODE->getRootOf<TYPE>()
-
-#define DTREE_FIND_BY(ROOT, TYPE, COND) \
-		ROOT->getNodeBy<TYPE>([&](const auto& self) {return (COND);})
-
+private:
+	DtreeNode* dtree;
+};
 
 CCFAKE_NS_END
 

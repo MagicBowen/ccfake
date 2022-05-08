@@ -35,6 +35,8 @@ namespace detail {
 
         if constexpr (sizeof...(TS) > 0) {
             msg += log_format(fmt, std::forward<TS>(ts)...);
+        } else {
+        	msg += std::string(fmt);
         }
 
         std::cout << color_fmt_of(level) << msg << color_fmt_of(LogLevel::NONE) << std::endl;
