@@ -1,9 +1,36 @@
 #ifndef H186F2EF9_87DB_441E_BE95_7A8005BCCC83
 #define H186F2EF9_87DB_441E_BE95_7A8005BCCC83
 
-#include "ccfake/dtree/dtree_node_builder.h"
+#include "ccfake/dtree/dtree_node.h"
 
 CCFAKE_NS_BEGIN
+
+template<typename NODE>
+struct DtreeNodeBuilder {
+	template<typename ...ATTR>
+	explicit DtreeNodeBuilder(DtreeNode::Type type, ATTR&& ...attr)
+	: node(new NODE(std::forward<ATTR>(attr)...)){
+		node->updateType(type);
+	}
+
+	template<typename USER_BUILDER>
+	auto build(USER_BUILDER && userBuilder) {
+		std::forward<USER_BUILDER>(userBuilder)(*node);
+		return std::move(node);
+	}
+
+private:
+	std::unique_ptr<NODE> node;
+};
+
+template<typename NODE, typename USER_BUILDER>
+auto operator* (DtreeNodeBuilder<NODE> &&nodeBuilder, USER_BUILDER && userBuilder) {
+	return nodeBuilder.build(std::forward<USER_BUILDER>(userBuilder));
+}
+
+template<typename NODE> DtreeNode& operator+ (DtreeNode & root, NODE && node) {
+	return root.add(std::forward<NODE>(node));
+}
 
 ///////////////////////////////////////////////////////////
 #define DTREE_NODE_TYPE(TYPE) 					\
