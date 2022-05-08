@@ -54,9 +54,8 @@ $ chmod a+x ./ccup.sh
 - [x]: remove node type ?
 - [x]: refact interface and macro
 - [x]: test example
-- [ ]: activate
-- [ ]: visitor
-- [ ]: dump
-- [ ]: lifecycle, right reference?
-- [ ]: manager
+- [x]: activate
+- [x]: visitor
+- [x]: dump
+- [x]: lifecycle, right reference?
 - [ ]: fake system
