@@ -23,42 +23,33 @@ struct DtreeNode {
 		return const_cast<DtreeNode&>(*this).getSuperOf<ROOT>();
 	}
 
-	template<typename NODE>
-	NODE* getLowerOf() {
-		NODE *node = dynamic_cast<NODE*>(this);
-		if (node) return node;
-
-		if (!hasChildren()) return nullptr;
-
-		for (auto& child : children) {
-			auto result = child->getLowerOf<NODE>();
-			if (result) return result;
-		}
-		return nullptr;
-	}
-
-	template<typename NODE>
-	const NODE* getLowerOf() const {
-		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>();
-	}
-
 	template<typename NODE, typename EQUAL>
-	NODE* getLowerBy(const EQUAL& equal) {
+	NODE* getLowerOf(const EQUAL& equal) {
 		NODE *node = dynamic_cast<NODE*>(this);
 		if (node && equal(*node)) return node;
 
 		if (!hasChildren()) return nullptr;
 
 		for (auto& child : children) {
-			auto result = child->getLowerBy<NODE>(equal);
+			auto result = child->getLowerOf<NODE>(equal);
 			if (result) return result;
 		}
 		return nullptr;
 	}
 
 	template<typename NODE, typename EQUAL>
-	const NODE* getLowerBy(const EQUAL& equal) const {
-		return const_cast<DtreeNode&>(*this).getLowerBy<NODE>(equal);
+	const NODE* getLowerOf(const EQUAL& equal) const {
+		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>(equal);
+	}
+
+	template<typename NODE>
+	NODE* getLowerOf() {
+		return getLowerOf<NODE>([](const auto& n) {return true;});
+	}
+
+	template<typename NODE>
+	const NODE* getLowerOf() const {
+		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>();
 	}
 
 	virtual ~DtreeNode() = default;

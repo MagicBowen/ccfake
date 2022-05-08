@@ -39,7 +39,12 @@ struct Dtree {
 
 	template<typename NODE, typename COND>
 	NODE* get(const COND& cond) {
-		return dtree->getLowerBy<NODE>(cond);
+		return dtree->getLowerOf<NODE>(cond);
+	}
+
+	template<typename ROOT>
+	ROOT* getRoot() {
+		return dtree->getSuperOf<ROOT>();
 	}
 
 private:
