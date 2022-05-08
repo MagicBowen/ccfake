@@ -27,7 +27,7 @@ protected:
 
 	template<typename ROOT>
 	const ROOT* getSuperOf() const {
-		return const_cast<DtreeNode&>(*this).getSuperOf<ROOT>();
+		return const_cast<DtreeNode*>(this)->getSuperOf<ROOT>();
 	}
 
 	template<typename NODE, typename EQUAL>
@@ -46,7 +46,7 @@ protected:
 
 	template<typename NODE, typename EQUAL>
 	const NODE* getLowerOf(const EQUAL& equal) const {
-		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>(equal);
+		return const_cast<DtreeNode*>(this)->getLowerOf<NODE>(equal);
 	}
 
 	template<typename NODE>
@@ -56,7 +56,7 @@ protected:
 
 	template<typename NODE>
 	const NODE* getLowerOf() const {
-		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>();
+		return const_cast<DtreeNode*>(this)->getLowerOf<NODE>();
 	}
 
 private:
@@ -71,6 +71,27 @@ private:
 		return *this;
 	}
 
+	template<typename NODE>
+	Status accept(DtreeVisitor<NODE>& visitor) {
+		NODE *node = dynamic_cast<NODE*>(this);
+		if (!node) return Status::FAILURE;
+
+		if (status_is_failed(visitor.visitNode(*node))) {
+			return Status::FAILURE;
+		}
+		for (auto& child : children) {
+			if (status_is_failed(child->accept<NODE>(visitor))) {
+				return Status::FAILURE;
+			}
+		}
+		return Status::SUCCESS;
+	}
+
+	template<typename NODE>
+	Status accept(DtreeVisitor<NODE>& visitor) const {
+		return const_cast<DtreeNode*>(this)->accept<NODE>(visitor);
+	}
+
 	void updateType(Type type) {
 		this->type = type;
 	}
@@ -81,22 +102,6 @@ private:
 
 	bool hasChildren() const {
 		return !children.empty();
-	}
-
-	Status accept(DtreeVisitor& visitor) {
-		if (status_is_failed(visitor.visitNode(*this))) {
-			return Status::FAILURE;
-		}
-		for (auto& child : children) {
-			if (status_is_failed(child->accept(visitor))) {
-				return Status::FAILURE;
-			}
-		}
-		return Status::SUCCESS;
-	}
-
-	Status accept(DtreeVisitor& visitor) const {
-		return const_cast<DtreeNode&>(*this).accept(visitor);
 	}
 
 private:

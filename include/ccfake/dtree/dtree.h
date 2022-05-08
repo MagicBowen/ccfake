@@ -47,15 +47,20 @@ struct Dtree {
 		return dtree->getSuperOf<ROOT>();
 	}
 
-	Status accept(DtreeVisitor& visitor) {
-		if (status_is_failed(visitor.visitBegin(*dtree))) return Status::FAILURE;
+	template<typename NODE>
+	Status accept(DtreeVisitor<NODE>& visitor) {
+		NODE *treeNode = dynamic_cast<NODE*>(dtree);
+		if (!treeNode) return Status::FAILURE;
+
+		if (status_is_failed(visitor.visitBegin(*treeNode))) return Status::FAILURE;
 		if (status_is_failed(dtree->accept(visitor))) return Status::FAILURE;
-		if (status_is_failed(visitor.visitEnd(*dtree))) return Status::FAILURE;
+		if (status_is_failed(visitor.visitEnd(*treeNode))) return Status::FAILURE;
 		return Status::SUCCESS;
 	}
 
-	Status accept(const DtreeVisitor& visitor) {
-		return accept(*const_cast<DtreeVisitor*>(&visitor));
+	template<typename NODE>
+	Status accept(const DtreeVisitor<NODE>& visitor) {
+		return accept(*const_cast<DtreeVisitor<NODE>*>(&visitor));
 	}
 
 private:

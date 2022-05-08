@@ -1,6 +1,6 @@
 #include "catch2/catch.hpp"
 #include "hotel/hotel.h"
-#include "hotel/hotel_layout_visitor.h"
+#include "hotel/hotel_visitor.h"
 
 CCFAKE_NS_USING;
 
@@ -95,11 +95,19 @@ TEST_CASE("Hotel Test") {
 			SECTION("checkin room") {
 				Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->CheckIn("Bowen");
 
-				Dtree(Amber).accept(HotelLayoutVisitor{});
-
 				REQUIRE(room201->hasBooked);
 				REQUIRE(room201->guestName == "Bowen");
 			}
 		}
+	}
+
+	SECTION("close and layout hotel by visitor") {
+		Dtree(Amber).accept(HotelCloseVisitor{});
+
+		REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 102))->hasBooked);
+		REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->hasBooked);
+		REQUIRE(Dtree(Amber).get<Lobby>()->staffNum == 0);
+
+		Dtree(Amber).accept(HotelLayoutVisitor{});
 	}
 }

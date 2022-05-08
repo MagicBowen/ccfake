@@ -3,28 +3,64 @@
 
 #include "ccfake/dtree/dtree.h"
 
-DTREE_NODE_TYPE(Hotel) {
+DTREE_NODE_TYPE(HotelNode) {
+	DEFAULT(void, layout() const);
+	DEFAULT(void, close());
+};
+
+class Hotel : public HotelNode {
+public:
+	std::string name;
+	std::string address{""};
+
+public:
 	Hotel(std::string name)
 			: name{name} {
 	}
 
-	std::string address{""};
-	std::string name;
+private:
+	OVERRIDE(void layout() const) {
+		printf("Hotel : name(%s), address(%s)\n",
+				name.c_str(), address.c_str());
+	}
 };
 
-DTREE_NODE_TYPE(Lobby) {
+class Lobby : public HotelNode {
+public:
 	unsigned int staffNum{1};
+
+private:
+	OVERRIDE(void layout() const) {
+		printf("Lobby : staffNum(%d)\n", staffNum);
+	}
+
+	OVERRIDE(void close()) {
+		staffNum = 0;
+	}
 };
 
-DTREE_NODE_TYPE(Floor) {
+class Floor : public HotelNode {
+public:
+	unsigned int floorNo;
+
+public:
 	Floor(unsigned int floorNo)
 			: floorNo{floorNo} {
 	}
 
-	unsigned int floorNo;
+private:
+	OVERRIDE(void layout() const) {
+		printf("Floor : floorNo(%d)\n", floorNo);
+	}
 };
 
-DTREE_NODE_TYPE(Room) {
+class Room : public HotelNode {
+public:
+	unsigned int roomNo;
+	bool hasBooked{false};
+	std::string guestName;
+
+public:
 	Room(unsigned int roomNo)
 			: roomNo{roomNo} {
 	}
@@ -39,26 +75,51 @@ DTREE_NODE_TYPE(Room) {
 		this->hasBooked = false;
 	}
 
-	bool hasBooked{false};
-	std::string guestName;
-	unsigned int roomNo;
+private:
+	OVERRIDE(void layout() const) {
+		printf("Room : roomNo(%d), guest(%s)\n",
+				roomNo, guestName.c_str());
+	}
+
+	OVERRIDE(void close()) {
+		CheckOut();
+	}
 };
 
-DTREE_NODE_TYPE(MeetingRoom) {
+class MeetingRoom : public HotelNode {
+public:
+	unsigned int roomNo;
+	unsigned int capacity{0};
+
+public:
 	MeetingRoom(unsigned int roomNo)
 			: roomNo{roomNo} {
 	}
 
-	unsigned int capacity{0};
-	unsigned int roomNo;
+private:
+	OVERRIDE(void layout() const) {
+		printf("MeetingRoom : roomNo(%d), capacity(%d)\n",
+			    roomNo, capacity);
+	}
+
+	OVERRIDE(void close()) {
+		capacity = 0;
+	}
 };
 
-DTREE_NODE_TYPE(Restaurant) {
+class Restaurant : public HotelNode {
+public:
+	std::string name;
+
+public:
 	Restaurant(std::string name)
 			: name{name} {
 	}
 
-	std::string name;
+private:
+	OVERRIDE(void layout() const) {
+		printf("Restaurant : name(%s)\n", name.c_str());
+	}
 };
 
 #define HOTEL(NAME) 				DTREE_OF(Hotel, NAME, #NAME)
