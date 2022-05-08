@@ -54,9 +54,11 @@ private:
 	}
 };
 
+using RoomNo = unsigned int;
+
 class Room : public HotelNode {
 public:
-	unsigned int roomNo;
+	RoomNo roomNo;
 	bool hasBooked{false};
 	std::string guestName;
 
@@ -88,7 +90,7 @@ private:
 
 class MeetingRoom : public HotelNode {
 public:
-	unsigned int roomNo;
+	RoomNo roomNo;
 	unsigned int capacity{0};
 
 public:
