@@ -1,5 +1,6 @@
 #include "catch2/catch.hpp"
 #include "hotel/hotel.h"
+#include "hotel/hotel_layout_visitor.h"
 
 CCFAKE_NS_USING;
 
@@ -31,12 +32,12 @@ TEST_CASE("Hotel Test") {
 	};
 
 	SECTION("find unexisted room") {
-		auto result = Dtree(Amber).get<Room>(DTREE_COND(self.RoomNo() == 103));
+		auto result = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 103));
 		REQUIRE(result == nullptr);
 	};
 
 	SECTION("find booked room") {
-		auto result = Dtree(Amber).get<Room>(DTREE_COND(self.RoomNo() == 102));
+		auto result = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 102));
 
 		REQUIRE(result != nullptr);
 		REQUIRE(result->hasBooked);
@@ -47,24 +48,24 @@ TEST_CASE("Hotel Test") {
 		auto result = Dtree(Amber).get<Restaurant>();
 
 		REQUIRE(result != nullptr);
-		REQUIRE(result->Name() == "cafeteria");
+		REQUIRE(result->name == "cafeteria");
 	};
 
 	SECTION("find in floor") {
-		auto floor1 = Dtree(Amber).get<Floor>(DTREE_COND(self.FloorNo() == 1));
+		auto floor1 = Dtree(Amber).get<Floor>(DTREE_COND(self.floorNo == 1));
 		REQUIRE(floor1 != nullptr);
 
-		auto floor2 = Dtree(Amber).get<Floor>(DTREE_COND(self.FloorNo() == 2));
+		auto floor2 = Dtree(Amber).get<Floor>(DTREE_COND(self.floorNo == 2));
 		REQUIRE(floor2 != nullptr);
 
 		SECTION("find room in floor") {
-			auto result = Dtree(floor1).get<Room>(DTREE_COND(self.RoomNo() == 102));
+			auto result = Dtree(floor1).get<Room>(DTREE_COND(self.roomNo == 102));
 			REQUIRE(result != nullptr);
 			REQUIRE(result->guestName == "Jack");
 		}
 
 		SECTION("find room not in current floor") {
-			auto result = Dtree(floor1).get<Room>(DTREE_COND(self.RoomNo() == 201));
+			auto result = Dtree(floor1).get<Room>(DTREE_COND(self.roomNo == 201));
 			REQUIRE(result == nullptr);
 		}
 
@@ -76,12 +77,12 @@ TEST_CASE("Hotel Test") {
 		SECTION("find restaurant not in current floor") {
 			auto result = Dtree(floor2).get<Restaurant>();
 			REQUIRE(result != nullptr);
-			REQUIRE(result->Name() == "cafeteria");
+			REQUIRE(result->name == "cafeteria");
 		}
 	}
 
 	SECTION("check in and checkout room") {
-		auto room201 = Dtree(Amber).get<Room>(DTREE_COND(self.RoomNo() == 201));
+		auto room201 = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201));
 
 		REQUIRE(room201 != nullptr);
 		REQUIRE(room201->hasBooked);
@@ -89,10 +90,13 @@ TEST_CASE("Hotel Test") {
 
 		SECTION("checkout room") {
 			room201->CheckOut();
-			REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.RoomNo() == 201))->hasBooked);
+			REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->hasBooked);
 
 			SECTION("checkin room") {
-				Dtree(Amber).get<Room>(DTREE_COND(self.RoomNo() == 201))->CheckIn("Bowen");
+				Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->CheckIn("Bowen");
+
+				Dtree(Amber).accept(HotelLayoutVisitor{});
+
 				REQUIRE(room201->hasBooked);
 				REQUIRE(room201->guestName == "Bowen");
 			}

@@ -1,7 +1,7 @@
 #ifndef HD6F99730_E1DE_4A80_B35F_7FB7FDEB87EC
 #define HD6F99730_E1DE_4A80_B35F_7FB7FDEB87EC
 
-#include "ccfake/base/ns.h"
+#include "ccfake/dtree/dtree_visitor.h"
 #include <string>
 #include <memory>
 #include <list>
@@ -11,6 +11,13 @@ CCFAKE_NS_BEGIN
 struct DtreeNode {
 	using Type = std::string;
 
+	Type getType() const {
+		return type;
+	}
+
+	virtual ~DtreeNode() = default;
+
+protected:
 	template<typename ROOT>
 	ROOT* getSuperOf() {
 		if (isTreeRoot()) return nullptr;
@@ -52,9 +59,22 @@ struct DtreeNode {
 		return const_cast<DtreeNode&>(*this).getLowerOf<NODE>();
 	}
 
-	virtual ~DtreeNode() = default;
-
 private:
+	friend struct Dtree;
+	template<typename NODE> friend struct DtreeNodeBuilder;
+	template<typename NODE> friend DtreeNode& operator+ (DtreeNode& root, NODE&&);
+
+	template<typename NODE_PTR>
+	auto& add(NODE_PTR && node) {
+		node->parent = this;
+		children.emplace_back(std::forward<NODE_PTR>(node));
+		return *this;
+	}
+
+	void updateType(Type type) {
+		this->type = type;
+	}
+
 	bool isTreeRoot() const {
 		return parent == nullptr;
 	}
@@ -63,20 +83,20 @@ private:
 		return !children.empty();
 	}
 
-private:
-	friend struct Dtree;
-	template<typename NODE> friend struct DtreeNodeBuilder;
-	template<typename NODE> friend DtreeNode& operator+ (DtreeNode& root, NODE&&);
-
-	void updateType(Type type) {
-		this->type = type;
+	Status accept(DtreeVisitor& visitor) {
+		if (status_is_failed(visitor.visitNode(*this))) {
+			return Status::FAILURE;
+		}
+		for (auto& child : children) {
+			if (status_is_failed(child->accept(visitor))) {
+				return Status::FAILURE;
+			}
+		}
+		return Status::SUCCESS;
 	}
 
-	template<typename NODE_PTR>
-	auto& add(NODE_PTR && node) {
-		node->parent = this;
-		children.emplace_back(std::forward<NODE_PTR>(node));
-		return *this;
+	Status accept(DtreeVisitor& visitor) const {
+		return const_cast<DtreeNode&>(*this).accept(visitor);
 	}
 
 private:

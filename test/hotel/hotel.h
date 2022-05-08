@@ -9,8 +9,6 @@ DTREE_NODE_TYPE(Hotel) {
 	}
 
 	std::string address{""};
-
-private:
 	std::string name;
 };
 
@@ -23,11 +21,6 @@ DTREE_NODE_TYPE(Floor) {
 			: floorNo{floorNo} {
 	}
 
-	unsigned int FloorNo() const {
-		return floorNo;
-	}
-
-private:
 	unsigned int floorNo;
 };
 
@@ -46,18 +39,8 @@ DTREE_NODE_TYPE(Room) {
 		this->hasBooked = false;
 	}
 
-	unsigned int RoomNo() const {
-		return roomNo;
-	}
-
-	void RoomNo(unsigned int roomNo) {
-		this->roomNo = roomNo;
-	}
-
 	bool hasBooked{false};
 	std::string guestName;
-
-private:
 	unsigned int roomNo;
 };
 
@@ -67,8 +50,6 @@ DTREE_NODE_TYPE(MeetingRoom) {
 	}
 
 	unsigned int capacity{0};
-
-private:
 	unsigned int roomNo;
 };
 
@@ -77,11 +58,6 @@ DTREE_NODE_TYPE(Restaurant) {
 			: name{name} {
 	}
 
-	std::string Name() const {
-		return this->name;
-	}
-
-private:
 	std::string name;
 };
 
