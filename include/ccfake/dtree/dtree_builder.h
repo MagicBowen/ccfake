@@ -23,6 +23,7 @@ private:
 	std::unique_ptr<NODE> node;
 };
 
+///////////////////////////////////////////////////////////
 template<typename NODE, typename USER_BUILDER>
 auto operator* (DtreeNodeBuilder<NODE> &&nodeBuilder, USER_BUILDER && userBuilder) {
 	return nodeBuilder.build(std::forward<USER_BUILDER>(userBuilder));

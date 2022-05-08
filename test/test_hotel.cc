@@ -81,6 +81,14 @@ TEST_CASE("Hotel Test") {
 		}
 	}
 
+	SECTION("find floor by room") {
+		auto room = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 102));
+		auto floor = Dtree(room).getRoot<Floor>();
+
+		REQUIRE(floor != nullptr);
+		REQUIRE(floor->floorNo == 1);
+	}
+
 	SECTION("check in and checkout room") {
 		auto room201 = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201));
 
