@@ -8,12 +8,10 @@ CCFAKE_NS_BEGIN
 
 struct DtreeNode;
 
-template<typename NODE>
-struct DtreeVisitor {
-	DEFAULT(Status, visitBegin(NODE&));
-	DEFAULT(Status, visitEnd(NODE&));
-	DEFAULT(Status, visitNode(NODE&));
-	virtual ~DtreeVisitor() = default;
+INTERFACE(DtreeVisitor) {
+	DEFAULT(Status, visitBegin(DtreeNode&));
+	DEFAULT(Status, visitEnd(DtreeNode&));
+	DEFAULT(Status, visitNode(DtreeNode&));
 };
 
 CCFAKE_NS_END

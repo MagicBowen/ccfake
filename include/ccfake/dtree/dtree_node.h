@@ -71,25 +71,20 @@ private:
 		return *this;
 	}
 
-	template<typename NODE>
-	Status accept(DtreeVisitor<NODE>& visitor) {
-		NODE *node = dynamic_cast<NODE*>(this);
-		if (!node) return Status::FAILURE;
-
-		if (status_is_failed(visitor.visitNode(*node))) {
+	Status accept(DtreeVisitor& visitor) {
+		if (status_is_failed(visitor.visitNode(*this))) {
 			return Status::FAILURE;
 		}
 		for (auto& child : children) {
-			if (status_is_failed(child->accept<NODE>(visitor))) {
+			if (status_is_failed(child->accept(visitor))) {
 				return Status::FAILURE;
 			}
 		}
 		return Status::SUCCESS;
 	}
 
-	template<typename NODE>
-	Status accept(DtreeVisitor<NODE>& visitor) const {
-		return const_cast<DtreeNode*>(this)->accept<NODE>(visitor);
+	Status accept(DtreeVisitor& visitor) const {
+		return const_cast<DtreeNode*>(this)->accept(visitor);
 	}
 
 	void updateType(Type type) {
