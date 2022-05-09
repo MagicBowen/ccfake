@@ -1,6 +1,8 @@
 #include "catch2/catch.hpp"
 #include "hotel/hotel.h"
-#include "hotel/hotel_visitor.h"
+#include "hotel/hotel_layout.h"
+#include "hotel/hotel_close.h"
+#include "hotel/hotel_reserve.h"
 
 CCFAKE_NS_USING;
 
@@ -97,16 +99,26 @@ TEST_CASE("Hotel Test") {
 		REQUIRE(room201->guestName == "Robin");
 
 		SECTION("checkout room") {
-			room201->CheckOut();
+			room201->checkOut();
 			REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->hasBooked);
 
 			SECTION("checkin room") {
-				Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->CheckIn("Bowen");
+				Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->checkIn("Bowen");
 
 				REQUIRE(room201->hasBooked);
 				REQUIRE(room201->guestName == "Bowen");
 			}
 		}
+	}
+
+	SECTION("reserve room") {
+		HotelReserveVisitor visitor{"Jerry"};
+		Dtree(Amber).accept(visitor);
+
+		REQUIRE(visitor.getReservedRoomNo() == 101);
+		REQUIRE(Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 101))->hasBooked);
+		REQUIRE(Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 101))->guestName == "Jerry");
+		REQUIRE(Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 102))->guestName == "Jack");
 	}
 
 	SECTION("close and layout hotel by visitor") {
@@ -115,7 +127,8 @@ TEST_CASE("Hotel Test") {
 		REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 102))->hasBooked);
 		REQUIRE(!Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201))->hasBooked);
 		REQUIRE(Dtree(Amber).get<Lobby>()->staffNum == 0);
+		REQUIRE(Dtree(Amber).get<MeetingRoom>()->capacity == 0);
 
-		Dtree(Amber).accept(HotelLayoutVisitor{});
+		Dtree(Amber).accept(HotelLayoutExecutor{});
 	}
 }

@@ -7,7 +7,7 @@
 
 CCFAKE_NS_BEGIN
 
-struct HotelLayoutVisitor : DtreeExecutor<HotelNode> {
+struct HotelLayoutExecutor : DtreeExecutor<HotelNode> {
 private:
 	OVERRIDE(Status executeBegin(HotelNode& node)) {
 		printf("========= Hotel Layout ==========\n");
@@ -19,14 +19,6 @@ private:
 	}
 	OVERRIDE(Status execute(HotelNode& node)) {
 		node.layout();
-		return Status::SUCCESS;
-	}
-};
-
-struct HotelCloseVisitor : DtreeExecutor<HotelNode> {
-private:
-	OVERRIDE(Status execute(HotelNode& node)) {
-		node.close();
 		return Status::SUCCESS;
 	}
 };

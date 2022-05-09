@@ -5,7 +5,6 @@
 
 DTREE_NODE_TYPE(HotelNode) {
 	DEFAULT(void, layout() const);
-	DEFAULT(void, close());
 };
 
 class Hotel : public HotelNode {
@@ -32,10 +31,6 @@ public:
 private:
 	OVERRIDE(void layout() const) {
 		printf("Lobby : staffNum(%d)\n", staffNum);
-	}
-
-	OVERRIDE(void close()) {
-		staffNum = 0;
 	}
 };
 
@@ -67,12 +62,12 @@ public:
 			: roomNo{roomNo} {
 	}
 
-	void CheckIn(std::string guestName) {
+	void checkIn(std::string guestName) {
 		this->guestName = guestName;
 		this->hasBooked = true;
 	}
 
-	void CheckOut() {
+	void checkOut() {
 		this->guestName = "";
 		this->hasBooked = false;
 	}
@@ -82,15 +77,12 @@ private:
 		printf("Room : roomNo(%d), guest(%s)\n",
 				roomNo, guestName.c_str());
 	}
-
-	OVERRIDE(void close()) {
-		CheckOut();
-	}
 };
 
 class MeetingRoom : public HotelNode {
 public:
 	RoomNo roomNo;
+	bool hasBooked{false};
 	unsigned int capacity{0};
 
 public:
@@ -102,10 +94,6 @@ private:
 	OVERRIDE(void layout() const) {
 		printf("MeetingRoom : roomNo(%d), capacity(%d)\n",
 			    roomNo, capacity);
-	}
-
-	OVERRIDE(void close()) {
-		capacity = 0;
 	}
 };
 

@@ -7,6 +7,7 @@ CCFAKE_NS_BEGIN
 
 enum class Status {
 	SUCCESS = 0,
+	DONE    = 1,
 
 	RESERVED_FAIL = -1,
 	FAILURE       = -2,
@@ -24,6 +25,10 @@ static inline bool status_is_ok(Status status)
 static inline bool status_is_failed(Status status)
 {
     return !status_is_ok(status);
+}
+
+static inline bool status_is_done(Status status) {
+	return status == Status::DONE;
 }
 
 CCFAKE_NS_END

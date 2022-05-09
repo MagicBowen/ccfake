@@ -72,12 +72,15 @@ private:
 	}
 
 	Status accept(DtreeVisitor& visitor) {
-		if (status_is_failed(visitor.visitNode(*this))) {
-			return Status::FAILURE;
+		Status status = visitor.visitNode(*this);
+		if (status_is_failed(status) || status_is_done(status)) {
+			return status;
 		}
+
 		for (auto& child : children) {
-			if (status_is_failed(child->accept(visitor))) {
-				return Status::FAILURE;
+			status = child->accept(visitor);
+			if (status_is_failed(status) || status_is_done(status)) {
+				return status;
 			}
 		}
 		return Status::SUCCESS;
