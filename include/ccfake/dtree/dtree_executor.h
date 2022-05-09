@@ -25,7 +25,7 @@ private:
 	NODE_INTF& castToIntf(DtreeNode& dtreeNode) {
 		NODE_INTF* intf = dynamic_cast<NODE_INTF*>(&dtreeNode);
 		if (!intf) {
-			CCFAKE_FATAL("DtreeVisitor unsuported dtree node interface!");
+			CCFAKE_FATAL("Unsuported dtree node interface!");
 		}
 		return *intf;
 	}
