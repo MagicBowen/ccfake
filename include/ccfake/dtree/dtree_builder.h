@@ -58,6 +58,10 @@ template<typename NODE> DtreeNode& operator+ (DtreeNode & root, NODE && node) {
 		self.NAME = (VALUE)
 
 ///////////////////////////////////////////////////////////
+#define DTREE_ATTRS_OF(NAME, ...)  				\
+		self.NAME = decltype(self.NAME){__VA_ARGS__}
+
+///////////////////////////////////////////////////////////
 #define DTREE_COND(COND) [&](const auto& self) {return (COND);}
 
 CCFAKE_NS_END
