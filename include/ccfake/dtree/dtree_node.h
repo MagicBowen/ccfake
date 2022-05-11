@@ -4,6 +4,7 @@
 #include "ccfake/dtree/dtree_visitor.h"
 #include <string>
 #include <memory>
+#include <vector>
 #include <list>
 
 CCFAKE_NS_BEGIN
@@ -30,23 +31,23 @@ protected:
 		return const_cast<DtreeNode*>(this)->getSuperOf<ROOT>();
 	}
 
-	template<typename NODE, typename EQUAL>
-	NODE* getLowerOf(const EQUAL& equal) {
+	template<typename NODE, typename COND>
+	NODE* getLowerOf(const COND& cond) {
 		NODE *node = dynamic_cast<NODE*>(this);
-		if (node && equal(*node)) return node;
+		if (node && cond(*node)) return node;
 
 		if (!hasChildren()) return nullptr;
 
 		for (auto& child : children) {
-			auto result = child->getLowerOf<NODE>(equal);
+			auto result = child->getLowerOf<NODE>(cond);
 			if (result) return result;
 		}
 		return nullptr;
 	}
 
-	template<typename NODE, typename EQUAL>
-	const NODE* getLowerOf(const EQUAL& equal) const {
-		return const_cast<DtreeNode*>(this)->getLowerOf<NODE>(equal);
+	template<typename NODE, typename COND>
+	const NODE* getLowerOf(const COND& cond) const {
+		return const_cast<DtreeNode*>(this)->getLowerOf<NODE>(cond);
 	}
 
 	template<typename NODE>
@@ -57,6 +58,43 @@ protected:
 	template<typename NODE>
 	const NODE* getLowerOf() const {
 		return const_cast<DtreeNode*>(this)->getLowerOf<NODE>();
+	}
+
+	template<typename NODE, typename COND>
+	std::vector<NODE*> getLowerOfAll(const COND& cond) {
+		std::vector<NODE*> result;
+		getAllLowerNodesBy(cond, result);
+		return result;
+	}
+
+	template<typename NODE, typename COND>
+	const std::vector<NODE*> getLowerOfAll(const COND& cond) const {
+		return const_cast<DtreeNode*>(this)->getLowerOfAll<NODE>(cond);
+	}
+
+	template<typename NODE>
+	std::vector<NODE*> getLowerOfAll() {
+		return getLowerOfAll<NODE>([](const auto& n) {return true;});
+	}
+
+	template<typename NODE>
+	const std::vector<NODE*> getLowerOfAll() const {
+		return const_cast<DtreeNode*>(this)->getLowerOfAll<NODE>();
+	}
+
+private:
+	template<typename NODE, typename COND>
+	void getAllLowerNodesBy(const COND& cond, std::vector<NODE*>& result) {
+		NODE *node = dynamic_cast<NODE*>(this);
+		if (node && cond(*node)) {
+			result.push_back(node);
+		}
+
+		if (!hasChildren()) return;
+
+		for (auto& child : children) {
+			child->getAllLowerNodesBy<>(cond, result);
+		}
 	}
 
 private:

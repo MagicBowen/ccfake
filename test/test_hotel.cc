@@ -91,6 +91,23 @@ TEST_CASE("Hotel Test") {
 		REQUIRE(floor->floorNo == 1);
 	}
 
+	SECTION("find all rooms in hotel") {
+		auto rooms = Dtree(Amber).getAll<Room>();
+
+		REQUIRE(rooms.size() == 3);
+		REQUIRE(rooms[0]->roomNo == 101);
+		REQUIRE(rooms[1]->roomNo == 102);
+		REQUIRE(rooms[2]->roomNo == 201);
+	}
+
+	SECTION("find all rooms checked in") {
+		auto rooms = Dtree(Amber).getAll<Room>(DTREE_COND(self.hasBooked));
+
+		REQUIRE(rooms.size() == 2);
+		REQUIRE(rooms[0]->roomNo == 102);
+		REQUIRE(rooms[1]->roomNo == 201);
+	}
+
 	SECTION("check in and checkout room") {
 		auto room201 = Dtree(Amber).get<Room>(DTREE_COND(self.roomNo == 201));
 

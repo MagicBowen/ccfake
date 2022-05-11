@@ -10,7 +10,7 @@ struct Actor {
     template<typename CHECKER>
     void expect(const CHECKER& check) {
         using MSG = CCFAKE_ARG_TYPE(CHECKER);
-        MSG *msg = MSG::pop();
+        auto msg = MSG::pop();
         if (!msg) {
         	CCFAKE_FATAL("Actor fetches msg failed!");
         }

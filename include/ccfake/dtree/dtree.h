@@ -42,6 +42,16 @@ struct Dtree {
 		return dtree->getLowerOf<NODE>(cond);
 	}
 
+	template<typename NODE>
+	std::vector<NODE*> getAll() {
+		return dtree->getLowerOfAll<NODE>();
+	}
+
+	template<typename NODE, typename COND>
+	std::vector<NODE*> getAll(const COND& cond) {
+		return dtree->getLowerOfAll<NODE>(cond);
+	}
+
 	template<typename ROOT>
 	ROOT* getRoot() {
 		return dtree->getSuperOf<ROOT>();
