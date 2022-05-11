@@ -13,11 +13,7 @@ add_executable(${TEST_TARGET} ${SOURCES})
 
 target_include_directories(${TEST_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-            ${PROJECT_SOURCE_DIR}/include
-            ${PROJECT_SOURCE_DIR}/src
-            PRIVATE ${PROJECT_SOURCE_DIR}/deps )
-
-# target_link_libraries(${TEST_TARGET} PRIVATE ${TARGET_LIB})
+            ${PROJECT_SOURCE_DIR}/include )
 
 set_target_properties(${TEST_TARGET} PROPERTIES CXX_STANDARD 17)
 

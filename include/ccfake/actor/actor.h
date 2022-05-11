@@ -7,26 +7,26 @@
 CCFAKE_NS_BEGIN
 
 struct Actor {
-    template<typename CHECKER>
-    void expect(const CHECKER& check) {
-        using MSG = CCFAKE_ARG_TYPE(CHECKER);
-        auto msg = MSG::pop();
+    template<typename CHECKER, typename MSG = CCFAKE_ARG_TYPE(CHECKER)>
+    void fetch(const CHECKER& check) {
+        auto msg = MSG::fetch();
         if (!msg) {
         	CCFAKE_FATAL("Actor fetches msg failed!");
         }
         check(*msg);
     }
 
-    template<typename BUILDER>
+    template<typename BUILDER, typename MSG = CCFAKE_ARG_TYPE(BUILDER)>
     void submit(const BUILDER& build) {
-        using MSG = CCFAKE_ARG_TYPE(BUILDER);
-        MSG msg;
-        build(msg);
-        if (status_is_failed(MSG::put(msg))) {
+        auto msg = typename MSG::MsgPtr{new MSG};
+        build(*msg);
+        if (status_is_failed(MSG::submit(std::move(msg)))) {
         	CCFAKE_FATAL("Actor submit msg failed!");
         }
     }
 };
+
+#define CCFAKE_ACTOR(ACTOR)  struct ACTOR : ::CCFAKE_NS::Actor
 
 CCFAKE_NS_END
 

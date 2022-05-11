@@ -21,7 +21,7 @@ option(SHARED      "Generate shared library otherwise static" OFF)
 option(EXECUTABLE  "Generate executable target" OFF)
 option(ENABLE_TEST "Build tests" ON)
 option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF)
-option(ENABLE_ASON "Enable AddressSanitizer" OFF)
+option(ENABLE_ASON "Enable AddressSanitizer" ON)
 option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
 
 # ---- ASON & TSON config ----
@@ -34,16 +34,6 @@ if(ENABLE_TSAN)
     message(STATUS "ThreadSanitizer enabled")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1 -fsanitize=thread -fno-omit-frame-pointer -fPIC -fPIE")
 endif()
-
-
-# ---- Using CPM to add dependencies for project ----
-
-include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
-CPMUsePackageLock(package-lock.cmake)
-
-# ---- Add source folder for project ----
-
-# add_subdirectory("src")
 
 # ---- Add test for project ----
 

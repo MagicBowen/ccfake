@@ -4,6 +4,7 @@
 #include "ccfake/dtree/dtree.h"
 #include "ccfake/dtree/dtree_executor.h"
 #include "ccfake/actor/actor.h"
+#include "ccfake/msg/msg.h"
 #include "ccfake/log/log.h"
 
 #endif

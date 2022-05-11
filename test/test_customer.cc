@@ -1,4 +1,5 @@
 #include "catch2/catch.hpp"
+#include "ccfake/ccfake.h"
 #include "hotel/customer.h"
 #include "hotel/hotel.h"
 
@@ -7,14 +8,16 @@ CCFAKE_NS_USING;
 std::string HOTEL_NAME;
 std::string HOTEL_ADDR;
 
-struct Mail {
-	static const Mail* pop() {
-		return nullptr;
+CCFAKE_MSG(Mail) {
+	static MsgPtr fetch() {
+		auto mail = new Mail;
+		mail->hotelName = "marriott";
+		return MsgPtr(mail);
 	}
 
-	static Status put(Mail& mail) {
-		HOTEL_NAME = mail.hotelName;
-		HOTEL_ADDR = mail.hotelAddress;
+	static Status submit(MsgPtr mail) {
+		HOTEL_NAME = mail->hotelName;
+		HOTEL_ADDR = mail->hotelAddress;
 		return Status::SUCCESS;
 	}
 
@@ -42,9 +45,13 @@ TEST_CASE("Customer Test") {
 	Customer customer{"Bowen"};
 
 	SECTION("send mail to hotel") {
-		customer.submit([&](Mail &mail) {
+		customer.send([&](Mail &mail) {
 			mail.hotelName = Dtree(Amber).get<Hotel>()->name;
 			mail.hotelAddress = Dtree(Amber).get<Hotel>()->address;
+		});
+
+		customer.recv([&](const Mail &mail) {
+			REQUIRE(mail.hotelName == "marriott");
 		});
 
 		REQUIRE(HOTEL_NAME == "Amber");
