@@ -2,6 +2,7 @@
 #define HBE55842B_720A_438F_AC29_BB0BCA9A2753
 
 #include "ccfake/dtree/dtree.h"
+#include "hotel/mail.h"
 
 CCFAKE_DTREE_NODE_TYPE(HotelNode) {
 	DEFAULT(void, layout() const);
@@ -110,6 +111,16 @@ private:
 	OVERRIDE(void layout() const) {
 		printf("Restaurant : name(%s)\n", name.c_str());
 	}
+};
+
+class MailBox : public HotelNode {
+private:
+	OVERRIDE(void layout() const) {
+		printf("MailBox : count(%lu)\n", mails.size());
+	}
+
+private:
+	std::list<Mail::MsgPtr> mails;
 };
 
 #define HOTEL(NAME) 				CCFAKE_DTREE_OF(Hotel, NAME, #NAME)

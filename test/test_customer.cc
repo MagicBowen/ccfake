@@ -8,23 +8,6 @@ CCFAKE_NS_USING;
 std::string HOTEL_NAME;
 std::string HOTEL_ADDR;
 
-CCFAKE_MSG(Mail) {
-	static MsgPtr fetch() {
-		auto mail = new Mail;
-		mail->hotelName = "marriott";
-		return MsgPtr(mail);
-	}
-
-	static Status submit(MsgPtr mail) {
-		HOTEL_NAME = mail->hotelName;
-		HOTEL_ADDR = mail->hotelAddress;
-		return Status::SUCCESS;
-	}
-
-	std::string hotelName;
-	std::string hotelAddress;
-};
-
 TEST_CASE("Customer Test") {
 
 	HOTEL(Amber) {
@@ -42,7 +25,7 @@ TEST_CASE("Customer Test") {
 		};
 	};
 
-	Customer customer{"Bowen"};
+	Customer customer{"Bowen", *Amber};
 
 	SECTION("send mail to hotel") {
 		customer.send([&](Mail &mail) {
@@ -53,8 +36,5 @@ TEST_CASE("Customer Test") {
 		customer.recv([&](const Mail &mail) {
 			REQUIRE(mail.hotelName == "marriott");
 		});
-
-		REQUIRE(HOTEL_NAME == "Amber");
-		REQUIRE(HOTEL_ADDR == "ShangHai");
 	};
 }

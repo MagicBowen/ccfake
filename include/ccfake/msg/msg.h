@@ -11,7 +11,7 @@ struct FakeMsg {
 	using MsgPtr = std::unique_ptr<MSG>;
 };
 
-#define CCFAKE_MSG(MSG)  struct MSG : ::CCFAKE_NS::FakeMsg<MSG>
+#define CCFAKE_MSG_TYPE(MSG)  struct MSG : ::CCFAKE_NS::FakeMsg<MSG>
 
 CCFAKE_NS_END
 
