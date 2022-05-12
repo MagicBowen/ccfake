@@ -5,7 +5,7 @@
 
 CCFAKE_NS_USING;
 
-CCFAKE_ACTOR(Customer) {
+CCFAKE_ACTOR_TYPE(Customer) {
 public:
 	Customer(std::string name)
 	: name{name} {

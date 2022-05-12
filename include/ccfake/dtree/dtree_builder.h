@@ -34,35 +34,43 @@ template<typename NODE> DtreeNode& operator+ (DtreeNode & root, NODE && node) {
 }
 
 ///////////////////////////////////////////////////////////
-#define DTREE_NODE_TYPE(TYPE) 					\
+#define CCFAKE_DTREE_NODE_TYPE(TYPE) 		    \
 		struct TYPE : ::CCFAKE_NS::DtreeNode
 
 ///////////////////////////////////////////////////////////
-#define DTREE_OF(TYPE, NAME, ...)        		\
+#define CCFAKE_DTREE_OF(TYPE, NAME, ...)        \
 		std::unique_ptr<TYPE> NAME = 			\
 		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) \
 		* [](auto && self)
 
 ///////////////////////////////////////////////////////////
-#define DTREE_NODE_OF(TYPE, ...)      		    \
+#define CCFAKE_DTREE_NODE_OF(TYPE, ...)      	\
 		self + 									\
 		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) \
 		* [](auto && self)
 
 ///////////////////////////////////////////////////////////
-#define DTREE_LEAF_OF(TYPE, ...)    			\
-		DTREE_NODE_OF(TYPE, ##__VA_ARGS__) {}
+#define CCFAKE_DTREE_LEAF_OF(TYPE, ...)    		\
+		CCFAKE_DTREE_NODE_OF(TYPE, ##__VA_ARGS__) {}
 
 ///////////////////////////////////////////////////////////
-#define DTREE_ATTR_OF(NAME, VALUE)  			\
-		self.NAME = (VALUE)
+#define CCFAKE_DTREE_ATTR_OF(ATTR, VALUE)  		\
+		self.ATTR = (VALUE)
 
 ///////////////////////////////////////////////////////////
-#define DTREE_ATTRS_OF(NAME, ...)  				\
-		self.NAME = decltype(self.NAME){__VA_ARGS__}
+#define CCFAKE_DTREE_ATTRS_OF(ATTR, ...)  		\
+		self.ATTR = decltype(self.ATTR){__VA_ARGS__}
 
 ///////////////////////////////////////////////////////////
-#define DTREE_COND(COND) [&](const auto& self) {return (COND);}
+#define CCFAKE_DTREE_ATTR_SET(FUNC, VALUE)  	\
+		self.FUNC(VALUE)
+
+///////////////////////////////////////////////////////////
+#define CCFAKE_DTREE_ATTRS_SET(FUNC, ...)  		\
+		self.FUNC(__VA_ARGS__)
+
+///////////////////////////////////////////////////////////
+#define CCFAKE_DTREE_COND(COND) [&](const auto& self) {return (COND);}
 
 CCFAKE_NS_END
 

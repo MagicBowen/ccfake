@@ -26,7 +26,7 @@ struct Actor {
     }
 };
 
-#define CCFAKE_ACTOR(ACTOR)  struct ACTOR : ::CCFAKE_NS::Actor
+#define CCFAKE_ACTOR_TYPE(ACTOR)  struct ACTOR : ::CCFAKE_NS::Actor
 
 CCFAKE_NS_END
 

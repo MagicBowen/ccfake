@@ -3,7 +3,7 @@
 
 #include "ccfake/dtree/dtree.h"
 
-DTREE_NODE_TYPE(HotelNode) {
+CCFAKE_DTREE_NODE_TYPE(HotelNode) {
 	DEFAULT(void, layout() const);
 };
 
@@ -112,12 +112,12 @@ private:
 	}
 };
 
-#define HOTEL(NAME) 				DTREE_OF(Hotel, NAME, #NAME)
-#define LOBBY()     				DTREE_NODE_OF(Lobby)
-#define FLOOR(NO)     				DTREE_NODE_OF(Floor, NO)
-#define ROOM(NO)      				DTREE_NODE_OF(Room, NO)
-#define MEETING_ROOM(NO)  			DTREE_NODE_OF(MeetingRoom, NO)
-#define RESTAURANT(NAME)            DTREE_LEAF_OF(Restaurant, NAME)
-#define ATTR(NAME, VALUE)           DTREE_ATTR_OF(NAME, VALUE)
+#define HOTEL(NAME) 				CCFAKE_DTREE_OF(Hotel, NAME, #NAME)
+#define LOBBY()     				CCFAKE_DTREE_NODE_OF(Lobby)
+#define FLOOR(NO)     				CCFAKE_DTREE_NODE_OF(Floor, NO)
+#define ROOM(NO)      				CCFAKE_DTREE_NODE_OF(Room, NO)
+#define MEETING_ROOM(NO)  			CCFAKE_DTREE_NODE_OF(MeetingRoom, NO)
+#define RESTAURANT(NAME)            CCFAKE_DTREE_LEAF_OF(Restaurant, NAME)
+#define ATTR(NAME, VALUE)           CCFAKE_DTREE_ATTR_OF(NAME, VALUE)
 
 #endif
