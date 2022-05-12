@@ -109,24 +109,28 @@ private:
 		return *this;
 	}
 
-	Status accept(DtreeVisitor& visitor) {
-		for (auto& child : children) {
-			Status status = child->accept(visitor);
-			if (status_is_failed(status) || status_is_done(status)) {
-				return status;
-			}
-		}
+	Status accept(DtreeVisitor& visitor, DtreeVisitOrder order) {
+		Status status = Status::SUCCESS;
 
-		Status status = visitor.visitNode(*this);
-		if (status_is_failed(status) || status_is_done(status)) {
-			return status;
-		}
+		if (order == DtreeVisitOrder::TOP_DOWN) {
+			status = visitor.visitNode(*this);
+			if (status_is_terminal(status)) return status;
 
-		return Status::SUCCESS;
+			status = visitChildren(visitor, order);
+			if (status_is_terminal(status)) return status;
+
+		} else {
+			status = visitChildren(visitor, order);
+			if (status_is_terminal(status)) return status;
+
+			status = visitor.visitNode(*this);
+			if (status_is_terminal(status)) return status;
+		}
+		return status;
 	}
 
-	Status accept(DtreeVisitor& visitor) const {
-		return const_cast<DtreeNode*>(this)->accept(visitor);
+	Status accept(DtreeVisitor& visitor, DtreeVisitOrder order) const {
+		return const_cast<DtreeNode*>(this)->accept(visitor, order);
 	}
 
 	void updateType(Type type) {
@@ -139,6 +143,17 @@ private:
 
 	bool hasChildren() const {
 		return !children.empty();
+	}
+
+private:
+	Status visitChildren(DtreeVisitor& visitor, DtreeVisitOrder order) {
+		for (auto& child : children) {
+			Status status = child->accept(visitor, order);
+			if (status_is_terminal(status)) {
+				return status;
+			}
+		}
+		return Status::SUCCESS;
 	}
 
 private:

@@ -31,6 +31,10 @@ static inline bool status_is_done(Status status) {
 	return status == Status::DONE;
 }
 
+static inline bool status_is_terminal(Status status) {
+	return status_is_done(status) || status_is_failed(status);
+}
+
 CCFAKE_NS_END
 
 #endif

@@ -8,6 +8,10 @@ CCFAKE_NS_BEGIN
 
 struct DtreeNode;
 
+enum class DtreeVisitOrder {
+	TOP_DOWN, DOWN_TOP
+};
+
 INTERFACE(DtreeVisitor) {
 	DEFAULT(Status, visitBegin(DtreeNode&));
 	DEFAULT(Status, visitEnd(DtreeNode&));

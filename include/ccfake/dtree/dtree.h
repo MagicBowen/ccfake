@@ -57,15 +57,20 @@ struct Dtree {
 		return dtree->getSuperOf<ROOT>();
 	}
 
-	Status accept(DtreeVisitor& visitor) {
+	Status accept(DtreeVisitor& visitor,
+			DtreeVisitOrder order = DtreeVisitOrder::TOP_DOWN) {
+
 		if (status_is_failed(visitor.visitBegin(*dtree))) return Status::FAILURE;
-		if (status_is_failed(dtree->accept(visitor))) return Status::FAILURE;
+		if (status_is_failed(dtree->accept(visitor, order))) return Status::FAILURE;
 		if (status_is_failed(visitor.visitEnd(*dtree))) return Status::FAILURE;
+
 		return Status::SUCCESS;
 	}
 
-	Status accept(const DtreeVisitor& visitor) {
-		return accept(*const_cast<DtreeVisitor*>(&visitor));
+	Status accept(const DtreeVisitor& visitor,
+			DtreeVisitOrder order = DtreeVisitOrder::TOP_DOWN) {
+
+		return accept(*const_cast<DtreeVisitor*>(&visitor), order);
 	}
 
 private:
