@@ -110,17 +110,18 @@ private:
 	}
 
 	Status accept(DtreeVisitor& visitor) {
+		for (auto& child : children) {
+			Status status = child->accept(visitor);
+			if (status_is_failed(status) || status_is_done(status)) {
+				return status;
+			}
+		}
+
 		Status status = visitor.visitNode(*this);
 		if (status_is_failed(status) || status_is_done(status)) {
 			return status;
 		}
 
-		for (auto& child : children) {
-			status = child->accept(visitor);
-			if (status_is_failed(status) || status_is_done(status)) {
-				return status;
-			}
-		}
 		return Status::SUCCESS;
 	}
 
