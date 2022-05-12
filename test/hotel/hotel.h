@@ -120,7 +120,7 @@ private:
 	}
 
 private:
-	std::list<Mail::MsgPtr> mails;
+	std::list<Mail> mails;
 };
 
 #define HOTEL(NAME) 				CCFAKE_DTREE_OF(Hotel, NAME, #NAME)

@@ -23,18 +23,19 @@ public:
     	Actor::submit(check);
     }
 
-    template<typename MSG = Mail>
-    Mail::MsgPtr fetchMsg() {
-    	CCFAKE_INFO("customer fetch msg");
-    	auto mail = Mail::MsgPtr{new Mail};
-    	mail->hotelName = "marriott";
-    	return mail;
-    }
-
-    Status submitMsg(Mail::MsgPtr mail) {
-    	CCFAKE_INFO("customer submit msg");
+private:
+    Status fetchMsg(Mail& mail) {
+		CCFAKE_INFO("customer fetch mail");
+		mail.hotelName = "marriott";
     	return Status::SUCCESS;
     }
+
+    Status submitMsg(Mail& mail) {
+    	CCFAKE_INFO("customer submit mail");
+    	return Status::SUCCESS;
+    }
+
+    friend struct Actor<Customer>;
 
 private:
 	std::string name;
