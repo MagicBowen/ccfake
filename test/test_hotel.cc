@@ -9,7 +9,7 @@ CCFAKE_NS_USING;
 TEST_CASE("Hotel Test") {
 
 	HOTEL(Amber) {
-		LOBBY() {
+		LOBBY {
 			ATTR(staffNum, 2);
 		};
 		FLOOR(1) {

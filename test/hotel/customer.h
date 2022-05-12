@@ -3,7 +3,8 @@
 
 #include "ccfake/actor/actor.h"
 #include "ccfake/dtree/dtree.h"
-#include "mail.h"
+#include "hotel/hotel.h"
+#include "hotel/mail.h"
 
 CCFAKE_NS_USING;
 
@@ -14,25 +15,24 @@ public:
 	}
 
     template<typename CHECKER>
-    void recv(const CHECKER& check) {
+    void recvMail(const CHECKER& check) {
     	Actor::fetch(check);
     }
 
     template<typename CHECKER>
-    void send(const CHECKER& check) {
+    void sendMail(const CHECKER& check) {
     	Actor::submit(check);
     }
 
 private:
     Status fetchMsg(Mail& mail) {
-		CCFAKE_INFO("customer fetch mail");
-		mail.hotelName = "marriott";
-    	return Status::SUCCESS;
+    	auto mailBox = hotel.get<MailBox>();
+    	return mailBox->fetchMail(mail);
     }
 
     Status submitMsg(Mail& mail) {
-    	CCFAKE_INFO("customer submit mail");
-    	return Status::SUCCESS;
+    	auto mailBox = hotel.get<MailBox>();
+    	return mailBox->submitMail(mail);
     }
 
     friend struct Actor<Customer>;

@@ -10,9 +10,12 @@ std::string HOTEL_ADDR;
 
 TEST_CASE("Customer Test") {
 
-	HOTEL(Amber) {
-		ATTR(address, "ShangHai");
+	HOTEL(Marriott) {
+		ATTR(address, "Xi'an");
 
+		MAIL_BOX {
+			ATTR(capacity, 1);
+		};
 		ROOM(101) {
 			ATTR(hasBooked, false);
 		};
@@ -25,16 +28,25 @@ TEST_CASE("Customer Test") {
 		};
 	};
 
-	Customer customer{"Bowen", *Amber};
+	Customer customer{"Bowen", *Marriott};
 
-	SECTION("send mail to hotel") {
-		customer.send([&](Mail &mail) {
-			mail.hotelName = Dtree(Amber).get<Hotel>()->name;
-			mail.hotelAddress = Dtree(Amber).get<Hotel>()->address;
+	auto mailBox = Dtree(Marriott).get<MailBox>();
+
+	REQUIRE(mailBox->getMailCount() == 0);
+
+	SECTION("send and recv mails by customer") {
+		customer.sendMail([&](Mail &mail) {
+			mail.title = "Order";
+			mail.address = Marriott->address;
 		});
 
-		customer.recv([&](const Mail &mail) {
-			REQUIRE(mail.hotelName == "marriott");
+		REQUIRE(mailBox->getMailCount() == 1);
+
+		customer.recvMail([&](const Mail &mail) {
+			REQUIRE(mail.title == "Order");
+			REQUIRE(mail.address == "Xi'an");
 		});
+
+		REQUIRE(mailBox->getMailCount() == 0);
 	};
 }

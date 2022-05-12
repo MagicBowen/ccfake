@@ -2,7 +2,10 @@
 #define HBE55842B_720A_438F_AC29_BB0BCA9A2753
 
 #include "ccfake/dtree/dtree.h"
+#include "ccfake/base/status.h"
 #include "hotel/mail.h"
+
+using ccfake::Status;
 
 CCFAKE_DTREE_NODE_TYPE(HotelNode) {
 	DEFAULT(void, layout() const);
@@ -114,6 +117,31 @@ private:
 };
 
 class MailBox : public HotelNode {
+public:
+	std::size_t capacity{2};
+
+public:
+	Status submitMail(const Mail& mail) {
+		if (getMailCount() >=  capacity) {
+			return Status::FAILURE;
+		}
+		mails.push_back(mail);
+		return Status::SUCCESS;
+	}
+
+	Status fetchMail(Mail& mail) {
+		if (getMailCount() ==  0) {
+			return Status::FAILURE;
+		}
+		mail = *mails.begin();
+		mails.pop_front();
+		return Status::SUCCESS;
+	}
+
+	std::size_t getMailCount() const {
+		return mails.size();
+	}
+
 private:
 	OVERRIDE(void layout() const) {
 		printf("MailBox : count(%lu)\n", mails.size());
@@ -124,7 +152,8 @@ private:
 };
 
 #define HOTEL(NAME) 				CCFAKE_DTREE_OF(Hotel, NAME, #NAME)
-#define LOBBY()     				CCFAKE_DTREE_NODE_OF(Lobby)
+#define LOBBY     				    CCFAKE_DTREE_NODE_OF(Lobby)
+#define MAIL_BOX     				CCFAKE_DTREE_NODE_OF(MailBox)
 #define FLOOR(NO)     				CCFAKE_DTREE_NODE_OF(Floor, NO)
 #define ROOM(NO)      				CCFAKE_DTREE_NODE_OF(Room, NO)
 #define MEETING_ROOM(NO)  			CCFAKE_DTREE_NODE_OF(MeetingRoom, NO)

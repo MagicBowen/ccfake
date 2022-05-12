@@ -4,8 +4,8 @@
 #include <string>
 
 struct Mail {
-	std::string hotelName;
-	std::string hotelAddress;
+	std::string title;
+	std::string address;
 };
 
 #endif
