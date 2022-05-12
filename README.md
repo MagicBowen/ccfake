@@ -1,6 +1,6 @@
 ## Usage
 
-`ccfake` is a fake framework for developer testing under c++.
+`ccfake` is a fake framework for developer testing in c++.
 
 ```sh
 $ chmod a+x ./ccup.sh
@@ -48,14 +48,3 @@ $ chmod a+x ./ccup.sh
 # help
 ./ccup.sh -h
 ```
-
-## TODO
-
-- [x]: remove node type ?
-- [x]: refact interface and macro
-- [x]: test example
-- [x]: activate
-- [x]: visitor
-- [x]: dump
-- [x]: lifecycle, right reference?
-- [ ]: fake system
