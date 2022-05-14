@@ -2,7 +2,6 @@
 #define H47C58302_663B_47C5_9408_C40CCEEFD01E
 
 #include "ccfake/actor/actor.h"
-#include "ccfake/dtree/dtree.h"
 #include "hotel/hotel.h"
 #include "hotel/mail.h"
 
@@ -10,8 +9,8 @@ CCFAKE_NS_USING;
 
 CCFAKE_ACTOR_TYPE(Customer) {
 public:
-	Customer(std::string name, DtreeNode &node)
-	: name{name}, hotel{node} {
+	Customer(std::string name,  Hotel& hotel)
+	: name{name}, hotel{hotel} {
 	}
 
     template<typename CHECKER>
@@ -26,12 +25,12 @@ public:
 
 private:
     Status fetchMsg(Mail& mail) {
-    	auto mailBox = hotel.get<MailBox>();
+    	auto mailBox = Dtree(hotel).get<MailBox>();
     	return mailBox->fetchMail(mail);
     }
 
     Status submitMsg(Mail& mail) {
-    	auto mailBox = hotel.get<MailBox>();
+    	auto mailBox = Dtree(hotel).get<MailBox>();
     	return mailBox->submitMail(mail);
     }
 
@@ -39,7 +38,7 @@ private:
 
 private:
 	std::string name;
-    Dtree hotel;
+    Hotel& hotel;
 };
 
 #endif
