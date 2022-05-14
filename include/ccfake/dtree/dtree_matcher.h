@@ -29,7 +29,7 @@ namespace detail {
 
 ////////////////////////////////////////////////////////////
 #define CCFAKE_DTREE_MATCH_FOR(NODE)  					\
-for (auto *_pnode = &NODE; _pnode; _pnode = nullptr)
+if (auto *_pnode = &NODE; true)
 
 #define CCFAKE_DTREE_NODE_MATCH(TYPE, HANDLE)  			\
 if (auto nodep = dynamic_cast<TYPE*>(_pnode); nodep) { 	\
