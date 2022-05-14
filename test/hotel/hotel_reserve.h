@@ -1,7 +1,7 @@
 #ifndef HC3EF054A_92ED_4AD8_A08E_6BD4A8D550B3
 #define HC3EF054A_92ED_4AD8_A08E_6BD4A8D550B3
 
-#include "ccfake/dtree/dtree_dispatcher.h"
+#include "ccfake/dtree/dtree_matcher.h"
 #include "hotel/hotel.h"
 
 CCFAKE_NS_BEGIN
@@ -17,8 +17,8 @@ struct HotelReserveVisitor : DtreeVisitor {
 
 private:
 	OVERRIDE(Status visitNode(DtreeNode& node)) {
-		DTREE_NODE_DISPATCH_FOR(node) {
-			DTREE_NODE_DISPATCH(Room,  reserve);
+		CCFAKE_DTREE_MATCH_FOR(node) {
+			CCFAKE_DTREE_NODE_MATCH(Room,  reserve);
 		}
 		return Status::SUCCESS;
 	}
