@@ -7,10 +7,9 @@ CCFAKE_NS_BEGIN
 
 template<typename NODE>
 struct DtreeNodeBuilder {
-	template<typename ...ATTR>
-	explicit DtreeNodeBuilder(DtreeNode::Type type, ATTR&& ...attr)
-	: node(new NODE(std::forward<ATTR>(attr)...)){
-		node->updateType(type);
+	template<typename ...PARAs>
+	explicit DtreeNodeBuilder(PARAs&& ...paras)
+	: node(new NODE(std::forward<PARAs>(paras)...)){
 	}
 
 	template<typename USER_BUILDER>
@@ -40,13 +39,13 @@ template<typename NODE> DtreeNode& operator+ (DtreeNode & root, NODE && node) {
 ///////////////////////////////////////////////////////////
 #define CCFAKE_DTREE_OF(TYPE, NAME, ...)        \
 		std::unique_ptr<TYPE> NAME = 			\
-		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) \
+		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(__VA_ARGS__) \
 		* [](auto && self)
 
 ///////////////////////////////////////////////////////////
 #define CCFAKE_DTREE_NODE_OF(TYPE, ...)      	\
 		self + 									\
-		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(#TYPE, ##__VA_ARGS__) \
+		::CCFAKE_NS::DtreeNodeBuilder<TYPE>(__VA_ARGS__) \
 		* [](auto && self)
 
 ///////////////////////////////////////////////////////////

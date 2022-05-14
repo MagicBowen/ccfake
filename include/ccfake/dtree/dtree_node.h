@@ -2,19 +2,12 @@
 #define HD6F99730_E1DE_4A80_B35F_7FB7FDEB87EC
 
 #include "ccfake/dtree/dtree_visitor.h"
-#include <string>
 #include <memory>
 #include <vector>
-#include <list>
 
 CCFAKE_NS_BEGIN
 
 struct DtreeNode {
-	using Type = std::string;
-
-	Type getType() const {
-		return type;
-	}
 
 	virtual ~DtreeNode() = default;
 
@@ -133,10 +126,6 @@ private:
 		return const_cast<DtreeNode*>(this)->accept(visitor, order);
 	}
 
-	void updateType(Type type) {
-		this->type = type;
-	}
-
 	bool isTreeRoot() const {
 		return parent == nullptr;
 	}
@@ -158,9 +147,8 @@ private:
 
 private:
 	using Ptr = std::unique_ptr<DtreeNode>;
-	using DtreeNodeChildren = std::list<Ptr>;
+	using DtreeNodeChildren = std::vector<Ptr>;
 
-	Type type{"DtreeNode"};
 	DtreeNode *parent{nullptr};
 	DtreeNodeChildren children;
 };

@@ -4,6 +4,7 @@
 #include "ccfake/dtree/dtree.h"
 #include "ccfake/base/status.h"
 #include "hotel/mail.h"
+#include <list>
 
 using ccfake::Status;
 
